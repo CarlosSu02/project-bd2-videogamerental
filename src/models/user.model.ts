@@ -5,7 +5,7 @@ export interface IUser extends Document {
     name: string,
     phone: number,
     address: string
-}
+};
 
 const userSchema = new Schema({
     name: {
