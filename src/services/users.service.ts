@@ -26,7 +26,7 @@ export const getUsers = async (): Promise<ResponseDto> => {
 export const profile = async (email: string) => {
 
     // const existsUser = await User.findOne({ attributes: [ 'id', 'name', 'phone', 'address', 'email' ], where: { email } }); 
-    const existsUser = await User.findOne({ where: { email } }, [ 'id', 'name', 'phone', 'address', 'email' ]); 
+    const existsUser = await User.findOne({ email }, [ 'id', 'name', 'phone', 'address', 'email' ]); 
 
     if (!(existsUser)) throw new Error(JSON.stringify({ error: 404, message: 'User not exists!' }));
 
@@ -41,9 +41,9 @@ export const profile = async (email: string) => {
 
 };
 
-export const searchUserById = async (id: number) => {
+export const searchUserById = async (_id: number) => {
 
-    const existsUser = await User.findOne({ where: { id } }); 
+    const existsUser = await User.findOne({ _id }); 
     
     if (!(existsUser)) throw new Error(JSON.stringify({ error: 404, message: 'User not exists!' }));
 
@@ -53,7 +53,7 @@ export const searchUserById = async (id: number) => {
 
 export const searchUserByEmail = async (email: string) => {
 
-    const existsUser = await User.findOne({ where: { email } }); 
+    const existsUser = await User.findOne({ email }); 
 
     return existsUser;
 

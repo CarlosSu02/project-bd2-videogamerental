@@ -14,12 +14,6 @@ export class UpdateInfoUserDto {
     @IsOptional()
     public phone!: number;
 
-    @Length(3, 100)
-    @IsString()
-    // @IsNotEmpty()
-    @IsOptional()
-    public address!: string;
-
     @IsNumber()
     // @IsNotEmpty()
     @IsOptional()

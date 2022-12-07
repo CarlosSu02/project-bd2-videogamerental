@@ -90,7 +90,6 @@ export const signin = async (req: Request, res: Response) => {
         const _id_role = user?._id_role.toString();
 
         const role = await rolesService.getRoleById(_id_role!).then(info => info?.toJSON());
-        console.log(role);
 
         const signinUser = {
             // id: user!.id,
@@ -113,8 +112,6 @@ export const signin = async (req: Request, res: Response) => {
     } catch (error) {
 
         if (error instanceof Error) {
-
-            console.log(error);
             
             const info = JSON.parse(error.message);
             return res.status(info.code).send(info);
@@ -168,8 +165,9 @@ export const changePassword = async (req: Request, res: Response) => {
 
         const user = await usersService.searchUserByEmail(validatedUser.email);
 
-        const role = await rolesService.getRoleById(user?._id_role!).then(info => info?.toJSON());
-        console.log(role);
+        const _id_role = user?._id_role.toString();
+
+        const role = await rolesService.getRoleById(_id_role!).then(info => info?.toJSON());
         
         user?.set({
             password: validatedUser.new_password
@@ -178,9 +176,10 @@ export const changePassword = async (req: Request, res: Response) => {
 
         const changedPassword = {
             id: user?.id,
+            email: user?.email,
             old_password: validatedUser.password,
             new_password: validatedUser.new_password,
-            // role: user?.role.type
+            role: role?.name
         };
 
         const response: ResponseDto = {
