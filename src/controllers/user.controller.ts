@@ -89,7 +89,6 @@ export const updateUser = async (req: Request, res: Response) => {
         // const user = await User.findOne({ email }).populate('_id_role');
         const user = await User.findOne({ email }).populate('_id_role');
         
-        if (validatedUser.role !== undefined) validatedUser._id_role = (await rolesService.getRoleByName(validatedUser.role).then(data => data?._id));
 
         user?.set({
             ...validatedUser
@@ -126,7 +125,6 @@ export const updateUser = async (req: Request, res: Response) => {
 
 };
 
-// Para este de momento, es que la confirmacion de eliminar el perfil sea el inicio de sesion valido.
 export const deleteUser = async (req: Request, res: Response) => {
 
     try {

@@ -10,12 +10,12 @@ import * as authController from './auth.controller';
 
 const roles = [ 'owner', 'admin', 'employee' ];
 
-// superadmin
+// Owner
 export const getRoles = async (req: Request, res: Response) => {
 
     try {
 
-        // if (authController.token.role !== 'Superadmin') throw new Error(JSON.stringify({ code: 401, message: 'You do not have permission to list the roles!'}));
+        if (authController.token.role !== 'Owner') throw new Error(JSON.stringify({ code: 401, message: 'You do not have permission to list the roles!'}));
 
         const roles = await rolesService.getRoles();
 
@@ -40,7 +40,7 @@ export const createRole = async (req: Request, res: Response) => {
 
     try {
 
-        if (authController.token.role !== 'Superadmin') throw new Error(JSON.stringify({ code: 401, message: 'You do not have permission to list the roles!'}));
+        if (authController.token.role !== 'Owner') throw new Error(JSON.stringify({ code: 401, message: 'You do not have permission to list the roles!'}));
 
         const payload = req.body;
 
@@ -78,7 +78,7 @@ export const updateRole = async (req: Request, res: Response) => {
 
     try {
 
-        if (authController.token.role !== 'Superadmin') throw new Error(JSON.stringify({ code: 401, message: 'You do not have permission to list the roles!'}));
+        if (authController.token.role !== 'Owner') throw new Error(JSON.stringify({ code: 401, message: 'You do not have permission to list the roles!'}));
     
         const { id } = req.params;
 
@@ -116,42 +116,42 @@ export const updateRole = async (req: Request, res: Response) => {
 
 };
 
-// export const deleteRole = async (req: Request, res: Response) => {
+export const deleteRole = async (req: Request, res: Response) => {
 
-//     try {
+    try {
 
-//         if (authController.token.role !== 'Superadmin') throw new Error(JSON.stringify({ code: 401, message: 'You do not have permission to list the roles!'}));
+        if (authController.token.role !== 'Owner') throw new Error(JSON.stringify({ code: 401, message: 'You do not have permission to list the roles!'}));
     
-//         const { id } = req.params;
+        const { id } = req.params;
 
-//         const role = await rolesService.getRoleById(+id);
+        const role = await rolesService.getRoleById(id);
 
-//         await Role.destroy({ where: { id } });
+        await Role.findByIdAndDelete({ _id: role._id });
 
-//         const response: ResponseDto = {
-//             code: 200,
-//             message: `The role '${role.dataValues.type}' deleted successfully.`,
-//             results: {
-//                 ...role.dataValues
-//             }
-//         }
+        const response: ResponseDto = {
+            code: 200,
+            message: `The role '${role.name}' deleted successfully.`,
+            results: {
+                ...role
+            }
+        }
 
-//         res.status(response.code!).send(response);
+        res.status(response.code!).send(response);
         
-//     } catch (error) {
+    } catch (error) {
 
-//         if (error instanceof Error) {
+        if (error instanceof Error) {
             
-//             const info = JSON.parse(error.message);
-//             return res.status(info.code).send(info);
+            const info = JSON.parse(error.message);
+            return res.status(info.code).send(info);
         
-//         }
+        }
         
-//         return res.status(500).send(String(error));
+        return res.status(500).send(String(error));
         
-//     }
+    }
 
-// };
+};
 
 export const instertRoles = async () => {
 

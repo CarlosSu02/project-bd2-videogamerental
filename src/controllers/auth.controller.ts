@@ -41,6 +41,9 @@ export const signup = async (req: Request, res: Response) => {
         const existsRole = await rolesService.getRoleByName(validatedUser.role);
         if (!existsRole) throw new Error(JSON.stringify({ code: 400, message: `The role '${validatedUser.role}' is not exists!` }));
 
+        if (await User.countDocuments() === 0 && existsRole.name !== 'Owner')
+            throw new Error(JSON.stringify({ code: 400, message: `This is the first run of the application, the role must be 'Owner'.` }));
+
         const newUser = await User.create({ 
             ...validatedUser,
             _id_role: existsRole._id
