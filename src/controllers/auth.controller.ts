@@ -49,7 +49,7 @@ export const signup = async (req: Request, res: Response) => {
         // const role = await rolesService.getRoleByEmail(validatedUser.email);
 
         // Token
-        const accessToken = authUtils.createTokenCookie('access_token', { email: validatedUser.email }, process.env.SECRET_KEY_ACCESS_TOKEN!, '1min');
+        const accessToken = authUtils.createTokenCookie('access_token', { email: validatedUser.email, role: existsRole.name }, process.env.SECRET_KEY_ACCESS_TOKEN!, '1min');
         const refreshToken = authUtils.createTokenCookie('refresh_token', { email: validatedUser.email }, process.env.SECRET_KEY_REFRESH_TOKEN!, '1day');
         
         const response: ResponseDto = {
@@ -92,9 +92,9 @@ export const signin = async (req: Request, res: Response) => {
         const role = await rolesService.getRoleById(_id_role!).then(info => info?.toJSON());
 
         const signinUser = {
-            // id: user!.id,
+            id: user!._id,
             ...validatedUser,
-            // role: user!.role.type
+            role: role.name
         };
 
         const response: ResponseDto = {

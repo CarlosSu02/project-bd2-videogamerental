@@ -14,9 +14,14 @@ export class UpdateInfoUserDto {
     @IsOptional()
     public phone!: number;
 
-    @IsNumber()
+    @IsString()
     // @IsNotEmpty()
     @IsOptional()
-    public roleId!: number;
+    public role!: string;
+
+    @IsString()
+    // @IsNotEmpty()
+    @IsOptional()
+    public _id_role!: string;
 
 } 

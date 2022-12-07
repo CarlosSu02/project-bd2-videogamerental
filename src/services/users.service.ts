@@ -26,18 +26,26 @@ export const getUsers = async (): Promise<ResponseDto> => {
 export const profile = async (email: string) => {
 
     // const existsUser = await User.findOne({ attributes: [ 'id', 'name', 'phone', 'address', 'email' ], where: { email } }); 
-    const existsUser = await User.findOne({ email }, [ 'id', 'name', 'phone', 'address', 'email' ]); 
+    const existsUser = await User.findOne({ email }, [ '_id', 'name', 'phone', 'email', '_id_role' ]); 
 
     if (!(existsUser)) throw new Error(JSON.stringify({ error: 404, message: 'User not exists!' }));
 
-    // const role = await rolesService.getRoleByEmail(email);
+    const role = await rolesService.getRoleById(existsUser._id_role.toString());
 
-    const userData = {
-        ...existsUser.toJSON()
-        // role
+    const profile = {
+        _id: existsUser._id,
+        name: existsUser.name,
+        phone: existsUser.phone,
+        email: existsUser.email,
+        role: role.name
     }
 
-    return userData;
+    // const userData = {
+    //     ...profile,
+    //     role: role.name
+    // }
+
+    return profile;
 
 };
 
@@ -77,7 +85,17 @@ export const validationUpdateInfoUser = async (user: UpdateInfoUserDto, email: s
 
     if (!(await searchUserByEmail(email!))) throw new Error(JSON.stringify({ code: 404, message: 'User not exists!' }));
 
-    // if (user.roleId !== undefined) await rolesService.getRoleById(user._io!);
+    if (user.role !== undefined) {
+
+        user.role = generalUtils.formattingWords(user.role);
+        const existsRole =  await rolesService.getRoleByName(user.role)
+
+        if (!(existsRole)) 
+            throw new Error(JSON.stringify({ code: 400, message: `The role '${user.role}' is not exists!` }));
+        else
+            user._id_role = existsRole._id;
+
+    }
 
     return user;
 

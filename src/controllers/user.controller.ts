@@ -7,6 +7,7 @@ import User from "../models/user.model";
 import * as usersService from "../services/users.service";
 import * as authController from "./auth.controller";
 import * as authService from "../services/auth.service";
+import * as rolesService from "../services/roles.service";
 import { ResponseDto } from "../common/dto/response.dto";
 import { SigninUserDto } from "../dtos/signin_user.dto";
 
@@ -40,7 +41,7 @@ export const profile = async (req: Request, res: Response) => {
 
     try {
 
-        console.log(authController.token);
+        // console.log(authController.token);
 
         const { email } = authController.token;
         
@@ -79,7 +80,16 @@ export const updateUser = async (req: Request, res: Response) => {
         
         const updateInfoUserDto = plainToClass(UpdateInfoUserDto, payload);
         const validatedUser = await usersService.validationUpdateInfoUser(updateInfoUserDto, email);
-        const user = await User.findOne({ where: { email }, include: [{ model: Role }] });
+        // const user = await User.findOne({ where: { email }, include: [{ model: Role }] });
+
+        // let role;
+        // const user = await User.findOne({ email }).then(async (data) => { role = await Role.findById(data?._id_role).then(role => role?.name); return data });
+        // const user = await Role.findOne().populate({ path: 'users', select: 'name' });
+        
+        // const user = await User.findOne({ email }).populate('_id_role');
+        const user = await User.findOne({ email }).populate('_id_role');
+        
+        if (validatedUser.role !== undefined) validatedUser._id_role = (await rolesService.getRoleByName(validatedUser.role).then(data => data?._id));
 
         user?.set({
             ...validatedUser
@@ -102,6 +112,8 @@ export const updateUser = async (req: Request, res: Response) => {
     } catch (error) {
 
         if (error instanceof Error) {
+
+            console.log(error);
             
             const info = JSON.parse(error.message);
             return res.status(info.code).send(info);

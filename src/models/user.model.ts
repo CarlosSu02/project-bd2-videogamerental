@@ -31,7 +31,7 @@ const userSchema = new Schema(
         },
         _id_role: {
             type: Schema.Types.ObjectId,
-            ref: "Company"
+            ref: "Role"
         },
         _id_company: {
             type: Schema.Types.ObjectId,
