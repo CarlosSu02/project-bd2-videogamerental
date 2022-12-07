@@ -1,18 +1,18 @@
  
 import express, { json } from 'express';
 import cors from 'cors';
-import usersRoutes from './routes/users.routes';
+import customersRoutes from './routes/customers.routes';
 import companiesRoutes from './routes/companies.routes';
 import gamesRoutes from './routes/games.routes';
 
 const app = express();
 
-app.use(json());
-app.use(cors());
+app.use(json())
+   .use(cors());
 
-app.use('/api/users', usersRoutes);
-app.use('/api/companies', companiesRoutes);
-app.use('/api/games', gamesRoutes);
+app.use('/api/customers', customersRoutes)
+   .use('/api/companies', companiesRoutes)
+   .use('/api/games', gamesRoutes);
 
 export const listen = (PORT: number) => {
 

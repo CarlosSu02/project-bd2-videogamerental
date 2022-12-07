@@ -19,7 +19,8 @@ export interface ICompany extends Document {
     email: string,
     phone: number,
     address: string,
-    num_branches: number
+    num_branches: number,
+    owner_email: string
 };
 
 const companySchema = new Schema({
@@ -41,6 +42,10 @@ const companySchema = new Schema({
     },
     num_branches: {
         type: Number,
+        required: true
+    },
+    owner_email: {
+        type: String,
         required: true
     }
 });

@@ -1,10 +1,11 @@
 
-import { Schema, Document, model } from "mongoose";
+import { Schema, Document, model, StringSchemaDefinition } from "mongoose";
 
 export interface IUser extends Document {
     name: string,
     phone: number,
-    address: string
+    email: string,
+    password: string
 };
 
 const userSchema = new Schema({
@@ -16,7 +17,11 @@ const userSchema = new Schema({
         type: Number,
         required: true
     },
-    address: {
+    email: {
+        type: String,
+        required: true
+    },
+    password: {
         type: String,
         required: true
     }

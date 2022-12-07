@@ -1,13 +1,13 @@
 
 import { Request, Response } from "express"
-import User from '../models/user.model';
-import * as usersService from '../services/users.service';
+import Customer from '../models/customer.model';
+import * as usersService from '../services/customers.service';
 
-export const getUsers = async (req: Request, res: Response) => {
+export const getCustomers = async (req: Request, res: Response) => {
 
     try {
 
-        const users = await usersService.getUsers();
+        const users = await usersService.getCustomers();
 
         res.status(200).send(users);
         
