@@ -43,18 +43,22 @@ export const signup = async (req: Request, res: Response) => {
         const existsRole = await rolesService.getRoleByName(validatedUser.role);
         if (!existsRole) throw new Error(JSON.stringify({ code: 400, message: `The role '${validatedUser.role}' is not exists!` }));
 
-        if (await User.countDocuments() === 0 && existsRole.name !== 'Owner')
-            throw new Error(JSON.stringify({ code: 400, message: `This is the first run of the application, the role must be 'Owner'.` }));
+        if (existsRole.name !== 'Owner') {
 
-        if (await Company.countDocuments() === 0 && existsRole.name !== 'Owner')
-            throw new Error(JSON.stringify({ code: 400, message: `To sign up, there must be at least one existing company, at this time there are none registered.` }));
+            if (await User.countDocuments() === 0)
+                throw new Error(JSON.stringify({ code: 400, message: `This is the first run of the application, the role must be 'Owner'.` }));
 
-        if (validatedUser.company_email === undefined && existsRole.name !== 'Owner')
-            throw new Error(JSON.stringify({ code: 400, message: `You need to enter 'company_email' in order to associate it to a company.` }));
+            if (await Company.countDocuments() === 0)
+                throw new Error(JSON.stringify({ code: 400, message: `To sign up, there must be at least one existing company, at this time there are none registered.` }));
 
-        if (!(await companiesService.searchCompanyByEmail(validatedUser.company_email)) && existsRole.name !== 'Owner')
-            throw new Error(JSON.stringify({ code: 400, message: `Company email '${validatedUser.company_email}' is not exists!` }));
+            if (validatedUser.company_email === undefined)
+                throw new Error(JSON.stringify({ code: 400, message: `You need to enter 'company_email' in order to associate it to a company.` }));
+
+            if (!(await companiesService.searchCompanyByEmail(validatedUser.company_email)))
+                throw new Error(JSON.stringify({ code: 400, message: `Company email '${validatedUser.company_email}' is not exists!` }));
         
+        }
+
         // const newUserSim = await User.create({ 
         //     ...validatedUser,
         //     _id_role: existsRole._id,
@@ -72,7 +76,7 @@ export const signup = async (req: Request, res: Response) => {
         // const role = await rolesService.getRoleByEmail(validatedUser.email);
 
         // Token
-        const accessToken = authUtils.createTokenCookie('access_token', { email: validatedUser.email, role: existsRole.name }, process.env.SECRET_KEY_ACCESS_TOKEN!, '1min');
+        const accessToken = authUtils.createTokenCookie('access_token', { email: validatedUser.email, role: existsRole.name, _id_company: newUser._id_company }, process.env.SECRET_KEY_ACCESS_TOKEN!, '1min');
         const refreshToken = authUtils.createTokenCookie('refresh_token', { email: validatedUser.email }, process.env.SECRET_KEY_REFRESH_TOKEN!, '1day');
         
         const response: ResponseDto = {
@@ -127,7 +131,7 @@ export const signin = async (req: Request, res: Response) => {
         };
 
         // Tokens
-        const accessToken = authUtils.createTokenCookie('access_token', { email: validatedUser.email, role: role.name }, process.env.SECRET_KEY_ACCESS_TOKEN!, '1min');
+        const accessToken = authUtils.createTokenCookie('access_token', { email: validatedUser.email, role: role.name, _id_company: user?._id_company }, process.env.SECRET_KEY_ACCESS_TOKEN!, '1min');
         const refreshToken = authUtils.createTokenCookie('refresh_token', { email: validatedUser.email }, process.env.SECRET_KEY_REFRESH_TOKEN!, '1day');
 
         res.status(response.code!).cookie('access_token', accessToken.cookie).cookie('refresh_token', refreshToken.cookie).header('Cache-Control', `auth-token: ${accessToken.token}`).send(response);
@@ -261,7 +265,7 @@ export const verifyToken = async (req: Request, res: Response, next: NextFunctio
                 const decode = jwt.decode(accessToken, { complete: true });
                 const payload = decode?.payload as IPayload;
                 
-                const newAccessToken = authUtils.createTokenCookie('access_token', { email: payload.email, role: payload.role }, process.env.SECRET_KEY_ACCESS_TOKEN!, '1min');
+                const newAccessToken = authUtils.createTokenCookie('access_token', { email: payload.email, role: payload.role, _id_company: payload._id_company }, process.env.SECRET_KEY_ACCESS_TOKEN!, '1min');
 
                 validatedAccessToken = authUtils.verifyTokenPayload(newAccessToken.token, process.env.SECRET_KEY_ACCESS_TOKEN!) as IPayload;
 
@@ -295,4 +299,3 @@ export const verifyToken = async (req: Request, res: Response, next: NextFunctio
     }
     
 };
-

@@ -70,5 +70,3 @@ export const changePassword = async (user: ChangePasswordDto): Promise<ChangePas
     return user;
 
 };
-
-

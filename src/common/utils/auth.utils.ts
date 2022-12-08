@@ -8,6 +8,7 @@ import { serialize } from "cookie";
 export interface IPayload {
     email: string,
     role: string,
+    _id_company: string,
     iat: number,
     exp: number    
 }

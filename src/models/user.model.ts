@@ -8,7 +8,8 @@ export interface IUser extends Document {
     phone: number,
     email: string,
     password: string,
-    _id_role: string
+    _id_role: string,
+    _id_company: string
 };
 
 const userSchema = new Schema(
@@ -33,10 +34,10 @@ const userSchema = new Schema(
             type: Schema.Types.ObjectId,
             ref: "Role"
         },
-        _id_company: [{
+        _id_company: {
             type: Schema.Types.ObjectId,
             ref: "Company"
-        }]
+        }
     },
     {
         versionKey: false

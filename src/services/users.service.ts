@@ -26,7 +26,7 @@ export const getUsers = async (): Promise<ResponseDto> => {
 export const profile = async (email: string) => {
 
     // const existsUser = await User.findOne({ attributes: [ 'id', 'name', 'phone', 'address', 'email' ], where: { email } }); 
-    const existsUser = await User.findOne({ email }, [ '_id', 'name', 'phone', 'email']).populate('_id_role').then(data => data?.toJSON()); 
+    const existsUser = await User.findOne({ email }, [ '_id', 'name', 'phone', 'email']).populate('_id_role').populate('_id_company', ['name', 'email', 'address', 'owner_email']).then(data => data?.toJSON()); 
 
     if (!(existsUser)) throw new Error(JSON.stringify({ error: 404, message: 'User not exists!' }));
 
@@ -37,7 +37,8 @@ export const profile = async (email: string) => {
         name: existsUser.name,
         phone: existsUser.phone,
         email: existsUser.email,
-        role: existsUser._id_role.name
+        role: existsUser._id_role.name,
+        company: existsUser._id_company
     }
 
     // const userData = {

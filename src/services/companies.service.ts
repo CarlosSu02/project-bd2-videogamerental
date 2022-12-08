@@ -3,7 +3,7 @@ import { CreateCompanyDto } from '../dtos/create_company.dto';
 import Company from '../models/company.model';
 import * as generalUtils from '../common/utils/general.utils';
 
-export const getcompanies = async () => {
+export const getCompanies = async () => {
 
     const companies = await Company.find();
     

@@ -42,40 +42,45 @@ export interface IGame extends Document {
     company: []
 };
 
-const gameSchema = new Schema({
-    name: {
-        type: String,
-        required: true
+const gameSchema = new Schema(
+    {
+        name: {
+            type: String,
+            required: true
+        },
+        purchase_price: {
+            type: String,
+            required: true
+        },
+        rental_price: {
+            type: Number,
+            required: true
+        },
+        genres: {
+            type: Array,
+            required: true
+        },
+        platforms: {
+            type: Array,
+            required: true
+        },
+        stock: {
+            type: Number,
+            required: true
+        },
+        for_rent: {
+            type: Array,
+            required: true
+        },
+        companies: [{
+            type: Schema.Types.ObjectId,
+            ref: 'Company',
+            required: true
+        }],
     },
-    purchase_price: {
-        type: String,
-        required: true
-    },
-    rental_price: {
-        type: Number,
-        required: true
-    },
-    genre: {
-        type: Array,
-        required: true
-    },
-    platform: {
-        type: Array,
-        required: true
-    },
-    stock: {
-        type: Number,
-        required: true
-    },
-    for_rent: {
-        type: Array,
-        required: true
-    },
-    companies: [{
-        type: Schema.Types.ObjectId,
-        ref: 'Company',
-        required: true
-    }],
-});
+    {
+        versionKey: false
+    }
+);
 
 export default model<IGame>('Game', gameSchema);
