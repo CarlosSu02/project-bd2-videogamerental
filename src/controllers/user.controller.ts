@@ -16,7 +16,8 @@ export const getUsers = async (req: Request, res: Response) => {
 
     try {
 
-        if (authController.token.role !== 'Superadmin') throw new Error(JSON.stringify({ code: 401, message: 'You do not have permission to list the roles!'}));
+        if (authController.token.role !== 'Owner') 
+            throw new Error(JSON.stringify({ code: 401, message: 'You do not have permission to list the users!'}));
 
         const users = await usersService.getUsers();
 
