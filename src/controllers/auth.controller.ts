@@ -5,17 +5,18 @@ import { SignupUserDto } from "../dtos/signup_user.dto";
 import User from "../models/user.model";
 import Role from "../models/role.model";
 import Company from "../models/company.model";
-import * as authService from "../services/auth.service";
 import jwt from 'jsonwebtoken';
 import 'dotenv/config';
 import { SigninUserDto } from "../dtos/signin_user.dto";
-import * as authUtils from "../common/utils/auth.utils";
 import { IPayload } from "../common/utils/auth.utils";
 import { ChangePasswordDto } from "../dtos/change_password.dto";
 import { ResponseDto } from "../common/dto/response.dto";
+import * as authService from "../services/auth.service";
+import * as authUtils from "../common/utils/auth.utils";
 import * as rolesService from "../services/roles.service";
 import * as usersService from "../services/users.service";
 import * as companiesService from "../services/companies.service";
+import * as reportController from './report.controller';
 
 export let token!: IPayload;
 
@@ -58,22 +59,27 @@ export const signup = async (req: Request, res: Response) => {
                 throw new Error(JSON.stringify({ code: 400, message: `Company email '${validatedUser.company_email}' is not exists!` }));
         
         }
-
-        // const newUserSim = await User.create({ 
-        //     ...validatedUser,
-        //     _id_role: existsRole._id,
-        //     _id_company: (await companiesService.searchCompanyByEmail(validatedUser.company_email))?._id
-        // });
-
-        // console.log(newUserSim);
-
+        
         const newUser = await User.create({ 
             ...validatedUser,
             _id_role: existsRole._id,
             _id_company: (await companiesService.searchCompanyByEmail(validatedUser.company_email))?._id
         });
 
-        // const role = await rolesService.getRoleByEmail(validatedUser.email);
+        if (newUser._id_company !== undefined) {
+
+            await reportController.createReport({ 
+                type: `${newUser.name} '${newUser.email}' joined in company.`,
+                _id_company: newUser._id_company,
+                data: {
+                    user: newUser.email,
+                    role: existsRole.name,
+                    _id_user: newUser._id,
+                    joined_at: new Date().toLocaleString()
+                }
+            });
+
+        }
 
         // Token
         const accessToken = authUtils.createTokenCookie('access_token', { email: validatedUser.email, role: existsRole.name, _id_company: newUser._id_company }, process.env.SECRET_KEY_ACCESS_TOKEN!, '1min');

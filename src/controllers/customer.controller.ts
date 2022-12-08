@@ -3,6 +3,7 @@ import { Request, Response } from "express"
 import Customer from '../models/customer.model';
 import * as customersService from '../services/customers.service';
 import * as authController from '../controllers/auth.controller';
+import * as reportController from './report.controller';
 import { plainToClass } from "class-transformer";
 import { CreateCustomerDto } from "../dtos/create_customer.dto";
 import { ResponseDto } from "../common/dto/response.dto";
@@ -20,12 +21,18 @@ export const getCustomers = async (req: Request, res: Response) => {
         
     } catch (error) {
 
-        (error instanceof Error) ? res.status(500).send(error.message) : res.status(500).send(String(error));
+        if (error instanceof Error) {
+                            
+            const info = JSON.parse(error.message);
+            return res.status(info.code).send(info);
         
+        }
+        
+        return res.status(500).send(String(error));
+                
     }
 
 };
-
 
 export const createCustomer = async (req: Request, res: Response) => {
 
@@ -46,6 +53,16 @@ export const createCustomer = async (req: Request, res: Response) => {
             ...validatedCustomer
         });
 
+        await reportController.createReport({ 
+            type: `Create Customer by ${authController.token.email}.`,
+            _id_company: authController.token._id_company,
+            data: {
+                user: authController.token.email,
+                _id_customer: newCustomer._id,
+                created_at: new Date().toLocaleString()
+            }
+        });
+
         const response: ResponseDto = {
             code: 201,
             message: 'New company created successfully.',
@@ -57,8 +74,6 @@ export const createCustomer = async (req: Request, res: Response) => {
     } catch (error) {
 
         if (error instanceof Error) {
-
-            console.log(error);
                             
             const info = JSON.parse(error.message);
             return res.status(info.code).send(info);

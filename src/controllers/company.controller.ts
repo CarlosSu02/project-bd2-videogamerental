@@ -23,8 +23,15 @@ export const getCompanies = async (req: Request, res: Response) => {
         
     } catch (error) {
 
-        (error instanceof Error) ? res.status(500).send(error.message) : res.status(500).send(String(error));
+        if (error instanceof Error) {
+                            
+            const info = JSON.parse(error.message);
+            return res.status(info.code).send(info);
         
+        }
+        
+        return res.status(500).send(String(error));
+                
     }
 
 };

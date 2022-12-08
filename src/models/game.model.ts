@@ -35,11 +35,11 @@ export interface IGame extends Document {
     name: string,
     purchase_price: number,
     rental_price: number,
-    genre: string[],
-    platform: string[],
+    genres: string[],
+    platforms: string[],
     stock: number
     for_rent: [],
-    company: []
+    _id_company: string
 };
 
 const gameSchema = new Schema(
@@ -72,11 +72,11 @@ const gameSchema = new Schema(
             type: Array,
             required: true
         },
-        companies: [{
+        _id_company: {
             type: Schema.Types.ObjectId,
             ref: 'Company',
             required: true
-        }],
+        },
     },
     {
         versionKey: false

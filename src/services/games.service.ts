@@ -1,7 +1,8 @@
 
 import Game from '../models/game.model';
-import * as generalUtils from '../common/utils/general.utils'
 import { CreateGameDto } from '../dtos/create_game.dto';
+import * as generalUtils from '../common/utils/general.utils';
+import * as authController from '../controllers/auth.controller';
 
 const genres = [ 'Accion', 'Deportes', 'Aventura', 'Carreras', 'Disparos en tercera persona', 
                  'Shooter', 'Pelea', 'Hack and slash', 'MMORPG', 'Massively Multiplayer', 
@@ -12,7 +13,7 @@ const platforms = ['PlayStation 4', 'PlayStation 5', 'PSP', 'PlayStation 3', 'Xb
 
 export const getGames = async (_id_company: string) => {
 
-    const games = await Game.find({ companies: _id_company });
+    const games = await Game.find({ _id_company });
     
     if (games.length === 0) throw new Error(JSON.stringify({ code: 500, message: 'There are not games added!' }));
 
@@ -40,11 +41,11 @@ export const getGameById = async (_id: string) => {
 
 };
 
-export const getGameByName = async (name: string) => {
+export const getGamesByName = async (name: string) => {
 
-    const game = await Game.findOne({ name });
+    const games = await Game.find({ name });
 
-    return game;
+    return games;
 
 };
 
@@ -56,9 +57,15 @@ export const validationAddGame = async (game: CreateGameDto): Promise<CreateGame
 
     game.name = generalUtils.formattingWords(game.name);
 
-    if ((await getGameByName(game.name)) !== null) 
-        throw new Error(JSON.stringify({ code: 400, message: 'Game already exists!' }));
+    const existsGame = await getGamesByName(game.name);
 
+    existsGame.map(game => {
+        
+        if (game._id_company.toString() === authController.token._id_company) 
+            throw new Error(JSON.stringify({ code: 400, message: 'Game already exists!' }));
+
+    });
+   
     if (game.genres.length === 0)
         throw new Error(JSON.stringify({ code: 400, message: 'You must enter at least one genre, here are a few examples...', results: genres }));
     

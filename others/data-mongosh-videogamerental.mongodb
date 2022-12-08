@@ -1,0 +1,514 @@
+
+/*
+    company: {
+        _id: object,
+        name: string,
+        email: string,
+        phone: number,
+        address: string,
+        num_branches: number
+    }
+
+    user: {
+        _id: object,
+        name: string,
+        phone: number,
+        address: string
+        _id_company: object
+    }
+
+    games: {
+        _id: object,
+        name: string,
+        purchase_price: number,
+        rental_price: number,	
+        genres: string[],
+        platforms: string[],
+        stock: number,
+        for_rent: [
+            {
+                _id_user: object,
+                date_rental: date,
+                date_return: date,
+                returned: boolean
+            }
+        ],
+        _id_company: object
+    }
+*/
+
+use videgamerental;
+
+db.createCollection("companies");
+db.createCollection("customers");
+db.createCollection("games");
+
+db.companies.insertOne({
+    name: "B Games",
+    email: "bgames@gmail.com",
+    phone: 12345678,
+    address: "Santa Rosa de Copan, Honduras",
+    num_branches: 20
+});
+
+db.customers.insertMany([
+    {
+        name: "Juan Perez",
+        dni: "0000111122222",
+        phone: 12345678,
+        address: "Santa Rosa de Copan, Honduras",
+        _id_company: db.companies.findOne({name: "B Games"})._id
+    },
+    {
+        name: "Maria Lopez",
+        dni: "0000111122222",
+        phone: 12345678,
+        address: "Santa Rosa de Copan, Honduras",
+        _id_company: db.companies.findOne({name: "B Games"})._id
+    },
+    {
+        name: "Pedro Martinez",
+        dni: "0000111122222",
+        phone: 12345678,
+        address: "Santa Rosa de Copan, Honduras",
+        _id_company: db.companies.findOne({name: "B Games"})._id
+    }
+]);
+
+db.games.insertMany([
+    {
+        name: "GTA-V",
+        purchase_price: 100,
+        rental_price: 10,
+        genres: [
+            "Accion",
+            "Aventura",
+            "Carreras"
+        ],
+        platforms: [
+            "PC",
+            "Xbox",
+            "PlayStation"
+        ],
+        stock: 100,
+        for_rent: [],
+        _id_company: db.companies.findOne({name: "B Games"})._id
+    },
+    {
+        name: "FIFA-21",
+        purchase_price: 100,
+        rental_price: 10,
+        genres: [
+            "Deportes"
+        ],
+        platforms: [
+            "PC",
+            "Xbox",
+            "PlayStation"
+        ],
+        stock: 100,
+        for_rent: [],
+        _id_company: db.companies.findOne({name: "B Games"})._id
+    },
+    {
+        name: "Minecraft",
+        purchase_price: 100,
+        rental_price: 10,
+        genres: [
+            "Aventura",
+            "Carreras"
+        ],
+        platforms: [
+            "PC",
+            "Xbox",
+            "PlayStation"
+        ],
+        stock: 100,
+        for_rent: [],
+        _id_company: db.companies.findOne({name: "B Games"})._id
+    },
+    {
+        name: "Call Of Duty",
+        purchase_price: 100,
+        rental_price: 10,
+        genres: [
+            "Accion",
+            "Aventura",
+            "Carreras"
+        ],
+        platforms: [
+            "PC",
+            "Xbox",
+            "PlayStation"
+        ],
+        stock: 100,
+        for_rent: [],
+        _id_company: db.companies.findOne({name: "B Games"})._id
+    },
+    {
+        name: "Mario Bros",
+        purchase_price: 100,
+        rental_price: 10,
+        genres: [
+            "Aventura",
+            "Carreras"
+        ],
+        platforms: [
+            "PC",
+            "Xbox",
+            "PlayStation"
+        ],
+        stock: 100,
+        for_rent: [],
+        _id_company: db.companies.findOne({name: "B Games"})._id
+    },
+    {
+        name: "Vice City",
+        purchase_price: 100,
+        rental_price: 10,
+        genres: [
+            "Accion",
+            "Aventura",
+            "Disparos en tercera persona"
+        ],
+        platforms: [
+            "PC",
+            "Xbox",
+            "PlayStation"
+        ],
+        stock: 100,
+        for_rent: [],
+        _id_company: db.companies.findOne({name: "B Games"})._id
+    },
+    {
+        name: "Star Wars: Jedi Fallen Order",
+        purchase_price: 100,
+        rental_price: 10,
+        genres: [
+            "Accion",
+            "Aventura"
+        ],
+        platforms: [
+            "PC",
+            "Xbox",
+            "PlayStation"
+        ],
+        stock: 100,
+        for_rent: [],
+        _id_company: db.companies.findOne({name: "B Games"})._id
+    },
+    {
+        name: "Star Wars: Battlefront",
+        purchase_price: 100,
+        rental_price: 10,
+        genres: [
+            "Accion",
+            "Shooter"
+        ],
+        platforms: [
+            "PC",
+            "Xbox",
+            "PlayStation"
+        ],
+        stock: 100,
+        for_rent: [],
+        _id_company: db.companies.findOne({name: "B Games"})._id
+    },
+    {
+        name: "Lego Star Wars: The Complete Saga",
+        purchase_price: 100,
+        rental_price: 10,
+        genres: [
+            "Accion",
+            "Aventura"
+        ],
+        platforms: [
+            "PC",
+            "Xbox",
+            "PlayStation"
+        ],
+        stock: 100,
+        for_rent: [],
+        _id_company: db.companies.findOne({name: "B Games"})._id
+    },
+    {
+        name: "Star Wars: The Force Unleashed",
+        purchase_price: 100,
+        rental_price: 10,
+        genres: [
+            "Accion",
+            "Aventura",
+            "Pelea",
+            "Hack and slash"
+        ],
+        platforms: [
+            "PC",
+            "Xbox",
+            "PlayStation"
+        ],
+        stock: 100,
+        for_rent: [],
+        _id_company: db.companies.findOne({name: "B Games"})._id
+    },
+    {
+        name: "Star Wars: The Force Unleashed 2",
+        purchase_price: 100,
+        rental_price: 10,
+        genres: [
+            "Accion",
+            "Aventura",
+            "Hack and slash"
+        ],
+        platforms: [
+            "PC",
+            "Xbox",
+            "PlayStation"
+        ],
+        stock: 100,
+        for_rent: [],
+        _id_company: db.companies.findOne({name: "B Games"})._id
+    },
+    {
+        name: "Star Wars: The Old Republic",
+        purchase_price: 100,
+        rental_price: 10,
+        genres: [
+            "MMORPG",
+            "Massively Multiplayer"
+        ],
+        platforms: [
+            "PC",
+            "Xbox",
+            "PlayStation"
+        ],
+        stock: 100,
+        for_rent: [],
+        _id_company: db.companies.findOne({name: "B Games"})._id
+    },
+    {
+        name: "Star Wars: Knights Of The Old Republic",
+        purchase_price: 100,
+        rental_price: 10,
+        genres: [
+            "Narrativa",
+            "Entretenimiento",
+            "Aventura",
+            "Rol",
+            "Ficción especulativa"
+        ],
+        platforms: [
+            "PC",
+            "Xbox",
+            "PlayStation",
+            "Nintendo Switch"
+        ],
+        stock: 100,
+        for_rent: [],
+        _id_company: db.companies.findOne({name: "B Games"})._id
+    },
+    {
+        name: "Star Wars: Knights Of The Old Republic 2: The Sith Lords",
+        purchase_price: 100,
+        rental_price: 10,
+        genres: [
+            "Accion",
+            "Aventura",
+            "Rol"
+        ],
+        platforms: [
+            "PC",
+            "Xbox",
+            "PlayStation"
+        ],
+        stock: 100,
+        for_rent: [],
+        _id_company: db.companies.findOne({name: "B Games"})._id
+    },
+    {
+        name: "Star Wars: Republic Commando",
+        purchase_price: 100,
+        rental_price: 10,
+        genres: [
+            "Disparos táctico",
+            "Aventura"
+        ],
+        platforms: [
+            "PC",
+            "Xbox",
+            "PlayStation"
+        ],
+        stock: 100,
+        for_rent: [],
+        _id_company: db.companies.findOne({name: "B Games"})._id
+    },
+    {
+        name: "Star Wars: Battlefront 2",
+        purchase_price: 100,
+        rental_price: 10,
+        genres: [
+            "Disparos en tercera persona",
+            "Aventura",
+            "Carreras",
+            "Shooter"
+        ],
+        platforms: [
+            "PC",
+            "Xbox",
+            "PlayStation"
+        ],
+        stock: 100,
+        for_rent: [],
+        _id_company: db.companies.findOne({name: "B Games"})._id
+    },
+    {
+        name: "God Of War",
+        purchase_price: 100,
+        rental_price: 10,
+        genres: [
+            "Accion",
+            "Aventura",
+            "Hack and slash",
+            "Rol"
+        ],
+        platforms: [
+            "PC",
+            "Xbox",
+            "PlayStation"
+        ],
+        stock: 100,
+        for_rent: [],
+        _id_company: db.companies.findOne({name: "B Games"})._id
+    },
+    {
+        name: "God Of War 2",
+        purchase_price: 100,
+        rental_price: 10,
+        genres: [
+            "Accion",
+            "Aventura",
+            "Hack and slash",
+            "Rol"
+        ],
+        platforms: [
+            "PC",
+            "Xbox",
+            "PlayStation"
+        ],
+        stock: 100,
+        for_rent: [],
+        _id_company: db.companies.findOne({name: "B Games"})._id
+    },
+    {
+        name: "God Of War 3",
+        purchase_price: 100,
+        rental_price: 10,
+        genres: [
+            "Accion",
+            "Aventura",
+            "Hack and slash",
+            "Rol"
+        ],
+        platforms: [
+            "PC",
+            "Xbox",
+            "PlayStation"
+        ],
+        stock: 100,
+        for_rent: [],
+        _id_company: db.companies.findOne({name: "B Games"})._id
+    },
+    {
+        name: "God Of War: Ascension",
+        purchase_price: 100,
+        rental_price: 10,
+        genres: [
+            "Accion",
+            "Aventura",
+            "Hack and slash",
+            "Rol"
+        ],
+        platforms: [
+            "PC",
+            "Xbox",
+            "PlayStation"
+        ],
+        stock: 100,
+        for_rent: [],
+        _id_company: db.companies.findOne({name: "B Games"})._id
+    },
+    {
+        name: "God Of War: Chains Of Olympus",
+        purchase_price: 100,
+        rental_price: 10,
+        genres: [
+            "Accion",
+            "Aventura",
+            "Hack and slash",
+            "Rol"
+        ],
+        platforms: [
+            "PC",
+            "Xbox",
+            "PlayStation"
+        ],
+        stock: 100,
+        for_rent: [],
+        _id_company: db.companies.findOne({name: "B Games"})._id
+    },
+    {
+        name: "God Of War: Ghost Of Sparta",
+        purchase_price: 100,
+        rental_price: 10,
+        genres: [
+            "Accion",
+            "Aventura",
+            "Hack and slash",
+            "Rol"
+        ],
+        platforms: [
+            "PSP",
+            "PlayStation 3"
+        ],
+        stock: 100,
+        for_rent: [],
+        _id_company: db.companies.findOne({name: "B Games"})._id
+    },
+    {
+        name: "God Of War: Origins Collection",
+        purchase_price: 100,
+        rental_price: 10,
+        genres: [
+            "Accion",
+            "Aventura",
+            "Hack and slash",
+            "Rol"
+        ],
+        platforms: [
+            "PC",
+            "Xbox",
+            "PlayStation 4"
+        ],
+        stock: 100,
+        for_rent: [],
+        _id_company: db.companies.findOne({name: "B Games"})._id    
+    },
+    {
+        name: "God Of War: Ragnarok",
+        purchase_price: 100,
+        rental_price: 10,
+        genres: [
+            "Accion",
+            "Aventura",
+            "Pelea",
+            "Hack and slash",
+            "Rol"
+        ],
+        platforms: [
+            "PlayStation 4",
+            "PlayStation 5"
+        ],
+        stock: 100,
+        for_rent: [],
+        _id_company: db.companies.findOne({name: "B Games"})._id
+    }
+]);

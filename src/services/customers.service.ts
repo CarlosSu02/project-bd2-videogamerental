@@ -25,6 +25,14 @@ export const searchCustomerByDni = async (dni: string) => {
 
 };
 
+export const searchCustomersByDni = async (dni: string) => {
+
+    const customers = await Customer.find({ dni });
+
+    return customers;
+
+};
+
 export const validationAddCustomer = async (customer: CreateCustomerDto): Promise<CreateCustomerDto> => {
 
     const errors = await generalUtils.errorsFromValidate(customer);
@@ -33,10 +41,17 @@ export const validationAddCustomer = async (customer: CreateCustomerDto): Promis
 
     customer.name = generalUtils.formattingWords(customer.name);
 
-    const existsCustomer = await searchCustomerByDni(customer.dni);
+    const existsCustomer = await searchCustomersByDni(customer.dni);
     
-    if (existsCustomer && existsCustomer._id_company.toString() === customer._id_company) 
-        throw new Error(JSON.stringify({ code: 400, message: 'Customer already exists!' }));
+    existsCustomer?.map(cust => {
+        
+        if (cust._id_company.toString() === customer._id_company) 
+            throw new Error(JSON.stringify({ code: 400, message: 'Customer already exists!' }));
+    
+    });
+    
+    // if (existsCustomer && existsCustomer._id_company.toString() === customer._id_company) 
+    //     throw new Error(JSON.stringify({ code: 400, message: 'Customer already exists!' }));
     
     return customer;
 

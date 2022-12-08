@@ -6,6 +6,7 @@ import { CreateGameDto } from "../dtos/create_game.dto";
 import Game from '../models/game.model';
 import * as gamesService from '../services/games.service';
 import * as authController from './auth.controller';
+import * as reportController from './report.controller';
 
 export const getGames = async (req: Request, res: Response) => {
 
@@ -20,8 +21,15 @@ export const getGames = async (req: Request, res: Response) => {
         
     } catch (error) {
 
-        (error instanceof Error) ? res.status(500).send(error.message) : res.status(500).send(String(error));
+        if (error instanceof Error) {
+                            
+            const info = JSON.parse(error.message);
+            return res.status(info.code).send(info);
         
+        }
+        
+        return res.status(500).send(String(error));
+                
     }
 
 };
@@ -61,13 +69,23 @@ export const createGame = async (req: Request, res: Response) => {
 
         const newGame = await Game.create({
             ...validatedGame,
-            companies: validatedGame._id_company,
-            for_rent: []
+            for_rent: [],
+            _id_company: validatedGame._id_company
+        });
+
+        await reportController.createReport({ 
+            type: `Create Game by ${authController.token.email}.`,
+            _id_company: authController.token._id_company,
+            data: {
+                user: authController.token.email,
+                _id_game: newGame._id,
+                created_at: new Date().toLocaleString()
+            }
         });
 
         const response: ResponseDto = {
             code: 201,
-            message: 'New company created successfully.',
+            message: 'New game created successfully.',
             results: newGame
         }
 
