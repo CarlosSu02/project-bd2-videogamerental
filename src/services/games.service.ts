@@ -41,11 +41,11 @@ export const getGameById = async (_id: string) => {
 
 };
 
-export const getGamesByName = async (name: string) => {
+export const getGameByNameAndCompany = async (name: string, _id_company: string) => {
 
-    const games = await Game.find({ name });
+    const game = await Game.findOne({ name, _id_company });
 
-    return games;
+    return game;
 
 };
 
@@ -57,15 +57,11 @@ export const validationAddGame = async (game: CreateGameDto): Promise<CreateGame
 
     game.name = generalUtils.formattingWords(game.name);
 
-    const existsGame = await getGamesByName(game.name);
+    const existsGame = await getGameByNameAndCompany(game.name, authController.token._id_company);
 
-    existsGame.map(game => {
-        
-        if (game._id_company.toString() === authController.token._id_company) 
-            throw new Error(JSON.stringify({ code: 400, message: 'Game already exists!' }));
+    if (existsGame) 
+        throw new Error(JSON.stringify({ code: 400, message: 'Game already exists!' }));
 
-    });
-   
     if (game.genres.length === 0)
         throw new Error(JSON.stringify({ code: 400, message: 'You must enter at least one genre, here are a few examples...', results: genres }));
     

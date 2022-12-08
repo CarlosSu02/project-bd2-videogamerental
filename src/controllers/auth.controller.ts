@@ -42,7 +42,7 @@ export const signup = async (req: Request, res: Response) => {
         const validatedUser = await authService.validationSignupUser(signupUserDto);
 
         const existsRole = await rolesService.getRoleByName(validatedUser.role);
-        if (!existsRole) throw new Error(JSON.stringify({ code: 400, message: `The role '${validatedUser.role}' is not exists!` }));
+        if (!existsRole) throw new Error(JSON.stringify({ code: 400, message: `The role '${validatedUser.role}' is not exists! The following roles exist...`, results: (await Role.find({ }, { _id: 0 }).sort({ name: 1 })).map(role => role.name) }));
 
         if (existsRole.name !== 'Owner') {
 
@@ -59,7 +59,7 @@ export const signup = async (req: Request, res: Response) => {
                 throw new Error(JSON.stringify({ code: 400, message: `Company email '${validatedUser.company_email}' is not exists!` }));
         
         }
-        
+
         const newUser = await User.create({ 
             ...validatedUser,
             _id_role: existsRole._id,

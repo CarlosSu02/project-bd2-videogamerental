@@ -8,6 +8,8 @@ import gamesRoutes from './routes/games.routes';
 import authRoutes from './routes/auth.routes';
 import usersRoutes from './routes/users.routes';
 import rolesRoutes from './routes/roles.routes';
+import reportsRoutes from './routes/reports.routes';
+import rentalRoutes from './routes/rental.routes';
 
 const app = express();
 
@@ -20,7 +22,9 @@ app.use('/api/customers', customersRoutes)
    .use('/api/games', gamesRoutes)
    .use('/api/auth', authRoutes)
    .use('/api/user', usersRoutes)
-   .use('/api/roles', rolesRoutes);
+   .use('/api/roles', rolesRoutes)
+   .use('/api/reports', reportsRoutes)
+   .use('/api/rental', rentalRoutes);
 
 export const listen = (PORT: number) => {
 

@@ -65,7 +65,7 @@ export const createCustomer = async (req: Request, res: Response) => {
 
         const response: ResponseDto = {
             code: 201,
-            message: 'New company created successfully.',
+            message: 'New customer created successfully.',
             results: newCustomer
         }
 

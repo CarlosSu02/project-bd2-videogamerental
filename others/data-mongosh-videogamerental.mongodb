@@ -77,7 +77,7 @@ db.customers.insertMany([
 
 db.games.insertMany([
     {
-        name: "GTA-V",
+        name: "Grand Theft Auto V",
         purchase_price: 100,
         rental_price: 10,
         genres: [
@@ -95,7 +95,7 @@ db.games.insertMany([
         _id_company: db.companies.findOne({name: "B Games"})._id
     },
     {
-        name: "FIFA-21",
+        name: "Fifa 21",
         purchase_price: 100,
         rental_price: 10,
         genres: [

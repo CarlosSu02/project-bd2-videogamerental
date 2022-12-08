@@ -47,20 +47,6 @@ export const getRoleByName = async (name: string) => {
 
     const role = await Role.findOne({ name })
 
-    // const roles = await Role.find();
-
-    // const arrayRoles = roles.map(role => {
-
-    //     return role.name;
-
-    // });
-
-    // console.log(name, await Role.findOne({ name }));
-
-    // return (arrayRoles.includes(name))
-    //          ? await Role.findOne({ where: { name } })
-    //          : null;
-
     return role;
 
 };

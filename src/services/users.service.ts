@@ -7,7 +7,7 @@ import * as rolesService from "./roles.service";
 import { ResponseDto } from "../common/dto/response.dto";
 import Role from "../models/role.model";
 
-// superadmin
+// owner
 export const getUsers = async (): Promise<ResponseDto> => {
 
     const searchAllUsers = await User.find();
@@ -25,12 +25,9 @@ export const getUsers = async (): Promise<ResponseDto> => {
 
 export const profile = async (email: string) => {
 
-    // const existsUser = await User.findOne({ attributes: [ 'id', 'name', 'phone', 'address', 'email' ], where: { email } }); 
     const existsUser = await User.findOne({ email }, [ '_id', 'name', 'phone', 'email']).populate('_id_role').populate('_id_company', ['name', 'email', 'address', 'owner_email']).then(data => data?.toJSON()); 
 
     if (!(existsUser)) throw new Error(JSON.stringify({ error: 404, message: 'User not exists!' }));
-
-    // const role = await rolesService.getRoleById(existsUser._id_role.toString());
 
     const profile = {
         _id: existsUser._id,
@@ -40,11 +37,6 @@ export const profile = async (email: string) => {
         role: existsUser._id_role.name,
         company: existsUser._id_company
     }
-
-    // const userData = {
-    //     ...profile,
-    //     role: role.name
-    // }
 
     return profile;
 

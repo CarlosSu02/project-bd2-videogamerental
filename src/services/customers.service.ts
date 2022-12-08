@@ -2,6 +2,7 @@
 import { CreateCustomerDto } from '../dtos/create_customer.dto';
 import Customer from '../models/customer.model';
 import * as generalUtils from '../common/utils/general.utils';
+import * as authController from '../controllers/auth.controller';
 
 export const getCustomers = async (_id_company: string) => {
 
@@ -25,11 +26,11 @@ export const searchCustomerByDni = async (dni: string) => {
 
 };
 
-export const searchCustomersByDni = async (dni: string) => {
+export const searchCustomerByDniAndCompany = async (dni: string, _id_company: string) => {
 
-    const customers = await Customer.find({ dni });
+    const customer = await Customer.findOne({ dni, _id_company });
 
-    return customers;
+    return customer;
 
 };
 
@@ -41,17 +42,10 @@ export const validationAddCustomer = async (customer: CreateCustomerDto): Promis
 
     customer.name = generalUtils.formattingWords(customer.name);
 
-    const existsCustomer = await searchCustomersByDni(customer.dni);
-    
-    existsCustomer?.map(cust => {
-        
-        if (cust._id_company.toString() === customer._id_company) 
-            throw new Error(JSON.stringify({ code: 400, message: 'Customer already exists!' }));
-    
-    });
-    
-    // if (existsCustomer && existsCustomer._id_company.toString() === customer._id_company) 
-    //     throw new Error(JSON.stringify({ code: 400, message: 'Customer already exists!' }));
+    const existsCustomer = await searchCustomerByDniAndCompany(customer.dni, authController.token._id_company);
+
+    if (existsCustomer) 
+        throw new Error(JSON.stringify({ code: 400, message: 'Customer already exists!' }));   
     
     return customer;
 

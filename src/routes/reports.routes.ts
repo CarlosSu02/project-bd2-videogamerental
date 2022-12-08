@@ -5,6 +5,6 @@ import * as reportController from '../controllers/report.controller';
 
 const router = Router();
 
-router.get('/', authController.verifyToken, reportController.);
+router.get('/', authController.verifyToken, reportController.getReports);
 
 export default router;

@@ -11,7 +11,7 @@ import * as rolesService from "../services/roles.service";
 import { ResponseDto } from "../common/dto/response.dto";
 import { SigninUserDto } from "../dtos/signin_user.dto";
 
-// superadmin
+// owner
 export const getUsers = async (req: Request, res: Response) => {
 
     try {
@@ -42,8 +42,6 @@ export const profile = async (req: Request, res: Response) => {
 
     try {
 
-        // console.log(authController.token);
-
         const { email } = authController.token;
         
         const user = await usersService.profile(email);
@@ -69,7 +67,6 @@ export const profile = async (req: Request, res: Response) => {
                      
     }       
 
-
 };
 
 export const updateUser = async (req: Request, res: Response) => {
@@ -81,16 +78,9 @@ export const updateUser = async (req: Request, res: Response) => {
         
         const updateInfoUserDto = plainToClass(UpdateInfoUserDto, payload);
         const validatedUser = await usersService.validationUpdateInfoUser(updateInfoUserDto, email);
-        // const user = await User.findOne({ where: { email }, include: [{ model: Role }] });
 
-        // let role;
-        // const user = await User.findOne({ email }).then(async (data) => { role = await Role.findById(data?._id_role).then(role => role?.name); return data });
-        // const user = await Role.findOne().populate({ path: 'users', select: 'name' });
-        
-        // const user = await User.findOne({ email }).populate('_id_role');
         const user = await User.findOne({ email }).populate('_id_role');
-        
-
+    
         user?.set({
             ...validatedUser
         });

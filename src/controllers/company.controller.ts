@@ -14,9 +14,6 @@ export const getCompanies = async (req: Request, res: Response) => {
 
     try {
 
-        // const count = await User.findOne({ email: 'test@gmail.com' }).then(data => data?.toJSON());
-        // console.log(count?._id_company.length)
-
         const companies = await companiesService.getCompanies();
 
         res.status(200).send(companies);
@@ -62,13 +59,9 @@ export const createCompany = async (req: Request, res: Response) => {
             results: newCompany
         }
 
-        // user?.set({
-        //     _id_company: [ newCompany._id ]
-        // });
-        // await user?.save();
         await User.findOneAndUpdate({ email: user?.email }, { _id_company: newCompany._id });
 
-        // al agregar una compañia, de esta forma no vuelve a iniciar sesion.
+        // al agregar una compañia retorna un token el el id de la compañia, de esta forma no vuelve a iniciar sesion.
         const newAccessToken = authUtils.createTokenCookie('access_token', { email: authController.token.email, role: authController.token.role, _id_company: newCompany._id }, process.env.SECRET_KEY_ACCESS_TOKEN!, '1min');
 
         res.status(response.code!).cookie('access_token', newAccessToken.cookie).send(response);
