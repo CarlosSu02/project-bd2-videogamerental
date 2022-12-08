@@ -3,30 +3,32 @@ import { plainToClass } from "class-transformer";
 import { NextFunction, Request, Response } from "express";
 import { SignupUserDto } from "../dtos/signup_user.dto";
 import User from "../models/user.model";
+import Role from "../models/role.model";
+import Company from "../models/company.model";
 import * as authService from "../services/auth.service";
 import jwt from 'jsonwebtoken';
 import 'dotenv/config';
 import { SigninUserDto } from "../dtos/signin_user.dto";
-import Role from "../models/role.model";
 import * as authUtils from "../common/utils/auth.utils";
 import { IPayload } from "../common/utils/auth.utils";
 import { ChangePasswordDto } from "../dtos/change_password.dto";
 import { ResponseDto } from "../common/dto/response.dto";
 import * as rolesService from "../services/roles.service";
 import * as usersService from "../services/users.service";
+import * as companiesService from "../services/companies.service";
 
 export let token!: IPayload;
 
-// export const ping = (req: Request, res: Response) => {
+export const ping = (req: Request, res: Response) => {
 
-//     const response: ResponseDto = {
-//         code: 200,
-//         message: 'Hello strange! 👋🏻'
-//     }
+    const response: ResponseDto = {
+        code: 200,
+        message: 'Hello strange! 👋🏻'
+    }
 
-//     res.status(response.code!).send(response);
+    res.status(response.code!).send(response);
 
-// };
+};
 
 // Registrarse
 export const signup = async (req: Request, res: Response) => {
@@ -44,9 +46,27 @@ export const signup = async (req: Request, res: Response) => {
         if (await User.countDocuments() === 0 && existsRole.name !== 'Owner')
             throw new Error(JSON.stringify({ code: 400, message: `This is the first run of the application, the role must be 'Owner'.` }));
 
+        if (await Company.countDocuments() === 0 && existsRole.name !== 'Owner')
+            throw new Error(JSON.stringify({ code: 400, message: `To sign up, there must be at least one existing company, at this time there are none registered.` }));
+
+        if (validatedUser.company_email === undefined && existsRole.name !== 'Owner')
+            throw new Error(JSON.stringify({ code: 400, message: `You need to enter 'company_email' in order to associate it to a company.` }));
+
+        if (!(await companiesService.searchCompanyByEmail(validatedUser.company_email)) && existsRole.name !== 'Owner')
+            throw new Error(JSON.stringify({ code: 400, message: `Company email '${validatedUser.company_email}' is not exists!` }));
+        
+        // const newUserSim = await User.create({ 
+        //     ...validatedUser,
+        //     _id_role: existsRole._id,
+        //     _id_company: (await companiesService.searchCompanyByEmail(validatedUser.company_email))?._id
+        // });
+
+        // console.log(newUserSim);
+
         const newUser = await User.create({ 
             ...validatedUser,
-            _id_role: existsRole._id
+            _id_role: existsRole._id,
+            _id_company: (await companiesService.searchCompanyByEmail(validatedUser.company_email))?._id
         });
 
         // const role = await rolesService.getRoleByEmail(validatedUser.email);

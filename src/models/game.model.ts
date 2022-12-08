@@ -71,10 +71,11 @@ const gameSchema = new Schema({
         type: Array,
         required: true
     },
-    company: {
-        type: Array,
+    companies: [{
+        type: Schema.Types.ObjectId,
+        ref: 'Company',
         required: true
-    },
+    }],
 });
 
 export default model<IGame>('Game', gameSchema);

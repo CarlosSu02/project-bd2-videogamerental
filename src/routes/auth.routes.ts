@@ -4,7 +4,7 @@ import * as authController from "../controllers/auth.controller";
 
 const router = Router();
 
-router/*.get('/ping', authController.ping)*/
+router.get('/ping', authController.ping)
       .post('/signup', authController.signup)
       .post('/signin', authController.signin)
       .patch('/change_password', authController.verifyToken, authController.changePassword)

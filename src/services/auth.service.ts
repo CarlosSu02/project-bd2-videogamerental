@@ -17,6 +17,8 @@ export const validationSignupUser = async (user: SignupUserDto): Promise<SignupU
     user.email = (user.email).toLowerCase();
     user.name = generalUtils.formattingWords(user.name);
 
+    if (user.company_email !== undefined) user.company_email = (user.company_email).toLowerCase();
+
     if ((await userService.searchUserByEmail(user.email!))) throw new Error(JSON.stringify({ code: 400, message: 'User already exists!' }));
     
     // await rolesService.getRoleByName(user.role);

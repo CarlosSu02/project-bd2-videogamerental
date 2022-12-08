@@ -33,10 +33,10 @@ const userSchema = new Schema(
             type: Schema.Types.ObjectId,
             ref: "Role"
         },
-        _id_company: {
+        _id_company: [{
             type: Schema.Types.ObjectId,
             ref: "Company"
-        }
+        }]
     },
     {
         versionKey: false

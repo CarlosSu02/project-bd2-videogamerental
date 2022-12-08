@@ -7,7 +7,7 @@ const router = Router();
 
 router.get('/', authController.verifyToken, roleController.getRoles)
       .post('/', authController.verifyToken, roleController.createRole)
-      .patch('/:id', authController.verifyToken, roleController.updateRole);
-    //   .delete('/:id', authController.verifyToken, roleController.deleteRole);
+      .patch('/:id', authController.verifyToken, roleController.updateRole)
+      .delete('/:id', authController.verifyToken, roleController.deleteRole);
 
 export default router;
