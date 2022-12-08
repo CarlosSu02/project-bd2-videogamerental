@@ -21,7 +21,7 @@ export const createRent = async (req: Request, res: Response) => {
         const payload = req.body;
 
         const createRentDto = plainToClass(CreateRentDto, payload);
-        const validatedRent = await rentalService.validatedRentGame(createRentDto);
+        const validatedRent = await rentalService.validationAddRentGame(createRentDto);
 
         const gameSave = {
             _id_rent: new mongoose.Types.ObjectId(),
@@ -33,17 +33,6 @@ export const createRent = async (req: Request, res: Response) => {
 
         await Game.findByIdAndUpdate({ _id: validatedRent._id_game }, { $push: { for_rent: gameSave } });
 
-        await reportController.createReport({ 
-            type: `Create Rent by ${authController.token.email}.`,
-            _id_company: authController.token._id_company,
-            data: {
-                user: authController.token.email,
-                _id_customer: gameSave._id_customer,
-                _id_rent: gameSave._id_rent,
-                rental_at: new Date().toLocaleString()
-            }
-        });
-
         const newBill: IBillCreate = {
             date: new Date().toLocaleString(),
             rental_price: validatedRent.rental_price,
@@ -52,7 +41,19 @@ export const createRent = async (req: Request, res: Response) => {
             _id_company: authController.token._id_company
         }
 
-        await Bill.create(newBill);
+        const bill = await Bill.create(newBill);
+
+        await reportController.createReport({ 
+            type: `Create Rent by ${authController.token.email}.`,
+            _id_company: authController.token._id_company,
+            data: {
+                user: authController.token.email,
+                _id_bill: bill._id,
+                _id_customer: gameSave._id_customer,
+                _id_rent: gameSave._id_rent,
+                rental_at: new Date().toLocaleString()
+            }
+        });
 
         const response: ResponseDto = {
             code: 201,
@@ -90,7 +91,7 @@ export const updateRent = async (req: Request, res: Response) => {
         const payload = req.body;
         
         const updateRentDto = plainToClass(UpdateRentDto, payload);
-        const validatedRent = await rentalService.validatedUpdateRent(updateRentDto);
+        const validatedRent = await rentalService.validationUpdateRent(updateRentDto);
 
         await Game.findByIdAndUpdate({ _id: validatedRent._id_game }, 
             {

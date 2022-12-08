@@ -17,10 +17,6 @@ export const getGames = async (_id_company: string) => {
     
     if (games.length === 0) throw new Error(JSON.stringify({ code: 500, message: 'There are not games added!' }));
 
-    // games.map(game => {
-    //     console.log(game._id);
-    // });
-
     return {
         code: 200,
         count: games.length,

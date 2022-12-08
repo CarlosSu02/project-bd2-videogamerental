@@ -16,7 +16,22 @@ interface IRent {
     rental_price: number
 }
 
-export const validatedRentGame = async (game: CreateRentDto): Promise<IRent> => {
+export const searchRentById = async (name: string, _id_company: string, _id_rent: string) => {
+    
+    const game = await gamesService.getGameByNameAndCompany(name, _id_company);
+
+    const existsRent = game?.for_rent.map((rent: any) => {
+        
+        if (rent._id_rent.toString() === _id_rent)
+            return rent;
+
+    }).filter(data => data !== undefined);
+
+    return existsRent;      
+
+};
+
+export const validationAddRentGame = async (game: CreateRentDto): Promise<IRent> => {
 
     const errors = await generalUtils.errorsFromValidate(game);
 
@@ -49,22 +64,7 @@ export const validatedRentGame = async (game: CreateRentDto): Promise<IRent> => 
 
 };
 
-export const searchRentById = async (name: string, _id_company: string, _id_rent: string) => {
-    
-    const game = await gamesService.getGameByNameAndCompany(name, _id_company);
-
-    const existsRent = game?.for_rent.map((rent: any) => {
-        
-        if (rent._id_rent.toString() === _id_rent)
-            return rent;
-
-    }).filter(data => data !== undefined);
-
-    return existsRent;      
-
-};
-
-export const validatedUpdateRent = async (game: UpdateRentDto) => {
+export const validationUpdateRent = async (game: UpdateRentDto) => {
 
     const errors = await generalUtils.errorsFromValidate(game);
 

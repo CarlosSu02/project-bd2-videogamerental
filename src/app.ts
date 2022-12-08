@@ -10,6 +10,7 @@ import usersRoutes from './routes/users.routes';
 import rolesRoutes from './routes/roles.routes';
 import reportsRoutes from './routes/reports.routes';
 import rentalRoutes from './routes/rental.routes';
+import purchasesRoutes from './routes/purchases.routes';
 
 const app = express();
 
@@ -24,7 +25,8 @@ app.use('/api/customers', customersRoutes)
    .use('/api/user', usersRoutes)
    .use('/api/roles', rolesRoutes)
    .use('/api/reports', reportsRoutes)
-   .use('/api/rental', rentalRoutes);
+   .use('/api/rental', rentalRoutes)
+   .use('/api/purchases', purchasesRoutes);
 
 export const listen = (PORT: number) => {
 

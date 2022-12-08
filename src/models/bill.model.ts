@@ -3,7 +3,8 @@ import { Document, model, Schema } from "mongoose";
 
 export interface IBillCreate {
     date: string,
-    purchase_price?: number,
+    total_purchase_price?: number,
+    amount?: number,
     rental_price?: number,
     deposit_rental?: number,
     _id_rent?: string,
@@ -12,7 +13,8 @@ export interface IBillCreate {
 
 export interface IBill extends Document {
     date: string,
-    purchase_price?: number,
+    total_purchase_price?: number,
+    amount?: number,
     rental_price?: number,
     deposit_rental?: number,
     _id_rent?: string,
@@ -25,7 +27,10 @@ const billSchema = new Schema(
             type: String,
             required: true
         },
-        purchase_price: {
+        total_purchase_price: {
+            type: Number
+        },
+        amount: {
             type: Number
         },
         rental_price: {
