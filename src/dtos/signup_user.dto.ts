@@ -21,6 +21,11 @@ export class SignupUserDto {
     @IsString()
     @IsNotEmpty()
     public password!: string;
+    
+    @Length(3, 100)
+    @IsString()
+    @IsNotEmpty()
+    public confirm_password!: string; 
 
     @IsString()
     @IsNotEmpty()

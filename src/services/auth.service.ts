@@ -23,6 +23,8 @@ export const validationSignupUser = async (user: SignupUserDto): Promise<SignupU
     
     // await rolesService.getRoleByName(user.role);
     // await rolesService.getRoleById(user.roleId!);
+
+    if (user.password !== user.confirm_password) throw new Error(JSON.stringify({ code: 400, message: 'Password confirmation has failed, please check if they are the same.' }));
     
     user.password = await authUtils.encryptPassword(user.password!);
 
@@ -57,9 +59,10 @@ export const changePassword = async (user: ChangePasswordDto): Promise<ChangePas
     
     user.email = (user.email).toLowerCase();
 
-    const { email, password, new_password } = user;
+    const { email, password, new_password, confirm_new_password } = user;
 
     if (password === new_password) throw new Error(JSON.stringify({ code: 400, message: 'The new password must be different!' }));
+    if (new_password !== confirm_new_password) throw new Error(JSON.stringify({ code: 400, message: 'New password confirmation failed, please check if they are the same.' }));
 
     if (!(await userService.searchUserByEmail(email!))) throw new Error(JSON.stringify({ code: 404, message: 'User not exists!' }));
     if (!(await authUtils.validatePassword(email!, password!))) throw new Error(JSON.stringify({ code: 400, message: 'Password is not valid!' }));
